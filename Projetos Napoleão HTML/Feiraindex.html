@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: De qual curso você seria?</title>
+    <style>
+        @font-face {
+            font-family: 'PixelDraft-Regular';
+            src: url(fonts/PixelDraft-Regular.ttf) format('truetype');
+        }
+        @font-face {
+            font-family: 'DePixelHalbfett';
+            src: url(fonts/DePixelHalbfett.otf) format('truetype');
+        }
+        body {
+            font-family: 'PixelDraft-Regular', sans-serif;
+            background-size: cover;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+            padding: 20px;
+            border-radius: 50px;
+            display: none;
+            margin: 0 auto;
+            max-width: 600px; /* Limita a largura da janela */
+            height: 690px;
+        }
+        .visible {
+            display: block;
+        }
+        button {
+            padding: 20px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            background-color: #d3cccc; /* Cor de fundo do botão */
+            border: none;
+            border-radius: 20px;
+            align-items: center;
+            display: block;
+            margin: 40px 120px;
+            width: 350px ;
+            font-family: 'DePixelHalbfett', sans-serif;
+        }
+        .question {
+            margin-bottom: 15px;
+            background-color: #f9da51; /* Vermelho escuro */
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        img {
+            width: 250px; /* Ajuste o tamanho da imagem conforme necessário */
+            height: 250px;
+            vertical-align: baseline;
+            margin: 10 10px;
+        }
+        .adm{
+            width: 300px;
+            height: 300px;
+            vertical-align: baseline;
+            margin: 0px;
+        }
+        .startbutton{
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 2px;
+            background-color: #795353; /* Cor de fundo do botão */
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body background="img/fundo site 3.jpg">
+
+<div id="startScreen" class="container visible">
+    <h1 style="color:white">De qual curso você seria?</h1>
+    <img class="adm" src="C:\Users\marya\Projetos Napoleão HTML\img\brasão adm.png" alt="Administração">
+    <img src="C:\Users\marya\Projetos Napoleão HTML\img\brasão contabil.png" alt="Contabilidade">
+    <img src="C:\Users\marya\Projetos Napoleão HTML\img\brasão agro.png" alt="Agropecuária">
+    <img src="C:\Users\marya\Projetos Napoleão HTML\img\brasão infor.png" alt="Informática">
+    <button class="startbutton" onclick="startQuiz()">Iniciar Quiz</button>
+</div>
+
+<div id="quizContainer" class="container">
+    <div id="questionContainer" class="question"></div>
+    <div id="optionsContainer"></div>
+    <button id="nextButton" style="display: none;" onclick="nextQuestion()">Próxima Pergunta</button>
+</div>
+
+<div id="resultContainer" class="container">
+    <h2 id="result"></h2>
+    <div id="videoContainer"></div>
+    <div id="imageContainer"></div>
+    <button onclick="restartQuiz()">Reiniciar Quiz</button>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "1. Com o que você prefere trabalhar mais?",
+            options: ["A) Pessoas", "B) Números", "C) Animais", "D) Computadores"],
+            answers: ["admin", "conta", "agro", "info"]
+        },
+        {
+            question: "2. O que mais te atrai?",
+            options: ["A) Séries", "B) Desenhos", "C) Filmes", "D) Animes bons"],
+            answers: ["admin", "agro", "conta", "info"]
+        },
+        {
+            question: "3. Qual atividade parece mais interessante para você?",
+            options: ["A) Organizar um evento", "B) Cuidar de plantas e animais", "C) Elaborar um planejamento financeiro", "D) Criar um site"],
+            answers: ["admin", "agro", "conta", "info"]
+        },
+        {
+            question: "4. Em qual dessas atividades você se sentiria mais à vontade?",
+            options: ["A) Coordenar uma equipe em um projeto", "B) Monitorar o crescimento de plantações", "C) Analisar dados financeiros de uma empresa", "D) Criar ou consertar sistemas e softwares"],
+            answers: ["admin", "agro", "conta", "info"]
+        },
+        {
+            question: "5. Se você pudesse escolher uma forma de contribuir para a sociedade, qual seria?",
+            options: ["A) Organizar campanhas para melhorar o bem-estar social", "B) Desenvolver práticas de agricultura sustentável", "C) Ajudar empresas a manterem suas finanças em dia", "D) Criar ferramentas digitais para facilitar o dia a dia das pessoas"],
+            answers: ["admin", "agro", "conta", "info"]
+        },
+        {
+            question: "6. Qual das seguintes habilidades você gostaria de desenvolver?",
+            options: ["A) Liderança e tomada de decisões", "B) Cuidado e manejo de animais", "C) Planejamento financeiro", "D) Lógica e raciocínio para programação"],
+            answers: ["admin", "agro", "conta", "info"]
+        },
+        {
+            question: "7. Qual desses animais você considera mais interessante?",
+            options: ["A) Leão", "B) Touro", "C) Cobra", "D) Raposa"],
+            answers: ["admin", "agro", "conta", "info"]
+        },
+        {
+            question: "8. Se você tivesse que escolher uma atividade para se destacar na escola, qual seria?",
+            options: ["A) Organizar uma feira de negócios", "B) Montar uma horta ou um jardim ecológico", "C) Fazer uma palestra sobre economia", "D) Dar uma oficina sobre programação"],
+            answers: ["admin", "agro", "conta", "info"]
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let scores = { admin: 0, conta: 0, agro: 0, info: 0 };
+
+    function startQuiz() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const question = questions[currentQuestionIndex];
+        document.getElementById('questionContainer').innerText = question.question;
+
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = ''; // Limpa opções anteriores
+
+        question.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.innerText = option;
+            button.onclick = () => selectOption(question.answers[index]);
+            optionsContainer.appendChild(button);
+        });
+
+        document.getElementById('nextButton').style.display = 'none'; // Esconde botão "Próxima Pergunta"
+    }
+
+    function selectOption(answer) {
+        scores[answer] += 1; // Incrementa a pontuação para o curso correspondente
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('resultContainer').style.display = 'block';
+
+        const maxScore = Math.max(scores.admin, scores.conta, scores.agro, scores.info);
+        let resultCourse = '';
+
+        if (maxScore === scores.admin) {
+    resultCourse = 'Administração';
+    document.getElementById('videoContainer').innerHTML = '<img src="img/infor_adm2.gif" width="560" height="315" alt="Resultado Adm">';
+        } else if (maxScore === scores.conta) {
+            resultCourse = 'Contabilidade';
+            document.getElementById('videoContainer').innerHTML = '<img src="img/infor_conta.gif" width="560" height="315" alt="Resultado Contabil">';
+        } else if (maxScore === scores.agro) {
+            resultCourse = 'Agropecuária';
+            document.getElementById('videoContainer').innerHTML = '<img src="img/infor_agro.gif" width="560" height="315" alt="Resultado Agro">';
+        } else {
+            resultCourse = 'Informática';
+            document.getElementById('imageContainer').innerHTML = '<img src="img/resultadoinfor.png" width="560" height="315" alt="Resultado Infor">';
+        }
+
+        // Mensagem personalizada se o resultado não for Informática
+        if (resultCourse !== 'Informática') {
+            document.getElementById('result').innerText = `Você seria de ${resultCourse}, mas acho melhor ir para Informática, hein!`;
+        } else {
+            document.getElementById('result').innerText = `Você seria de ${resultCourse}!`;
+        }
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        scores = { admin: 0, conta: 0, agro: 0, info: 0 };
+        document.getElementById('resultContainer').style.display = 'none';
+        document.getElementById('startScreen').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
